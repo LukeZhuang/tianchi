@@ -2,17 +2,24 @@ import numpy as np
 import hypothesis
 
 
-def f_linear(theta, X, y):
+def f_linear(theta, X, y, end_day, delta):
     theta = np.mat(theta).T
     m = X.shape[0]
-    J = (0.5 / m) * np.sum(np.power(y - X*theta, 2))
+    square = np.power(y - X * theta, 2)
+    # weight = 100.*np.exp(np.power(X[:, 1] - end_day, 2) / (-2. * delta * delta))
+    weight = 1. / (np.power((X[:, 1] - end_day) / 10, 2) + 1)
+    J = (0.5 / m) * np.sum(np.array(square) * np.array(weight))
     return J
 
 
-def fgrad_linear(theta, X, y):
+def fgrad_linear(theta, X, y, end_day, delta):
     theta = np.array([theta]).T
     m = X.shape[0]
-    grad = (1. / m) * (X.T*(X*theta - y))
+    loss = X * theta - y
+    # weight = 100*np.exp(np.power(X[:, 1] - end_day, 2) / (-2. * delta * delta))
+    weight = 1. / (np.power((X[:, 1] - end_day)/10, 2) + 1)
+    loss_weight = np.matrix(np.array(loss) * np.array(weight))
+    grad = (1. / m) * (X.T * loss_weight)
     return np.array(grad.T.tolist()[0])
 
 
@@ -51,8 +58,10 @@ if __name__ == '__main__':
     # print d * c
     # e = np.array([[4], [5], [6]])
     # print a * e
-    a = np.array([[1, 2, 3], [2, 3, 4], [3, 4, 5]])
-    b = np.array([[2], [5], [4]])
-    print type(a)
-    print type(b)
-    print a * b
+    # a = np.array([[1, 2, 3], [2, 3, 4], [3, 4, 5]])
+    # b = np.array([[2], [5], [4]])
+    # print type(a)
+    # print type(b)
+    # print a * b
+    a = np.matrix('1;2;3')
+    print 1./a

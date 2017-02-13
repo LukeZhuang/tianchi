@@ -1,8 +1,9 @@
 import numpy as np
 import MySQLdb as sql
 
+import polyX as poly
 
-def loadfromMysql(shop_id, week_day):
+def loadfromMysql(shop_id, week_day, end_day):
     try:
         conn = sql.connect(host='localhost', user='root', passwd='root', port=3306)
         cur = conn.cursor()
@@ -11,7 +12,7 @@ def loadfromMysql(shop_id, week_day):
         results = cur.fetchall()
         bond = 0
         for r in results:
-            if r[0] <= 475:
+            if r[0] <= end_day:
                 bond += 1
             else:
                 break
@@ -21,13 +22,8 @@ def loadfromMysql(shop_id, week_day):
             X.append(r[0])
             y.append(r[1])
         X = np.matrix(np.array([X]).T)
-        X = np.column_stack((X, np.power(X[:, 0], 0.5)))
-        X = np.column_stack((X, np.power(X[:, 0], 2)))
-        # X = np.column_stack((X, np.power(X[:, 0], 3)))
-        # X = np.column_stack((X, np.power(X[:, 0], 4)))
-        # X = np.column_stack((X, np.power(X[:, 0], 5)))
+        X=poly.polyX(X)
         y = np.matrix(np.array([y]).T)
-        X = np.column_stack((np.array(np.ones(X.shape[0])).T, X))
         trainX = X[:bond, :]
         testX = X[bond:]
         trainy = y[:bond, :]
