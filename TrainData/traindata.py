@@ -7,7 +7,7 @@ def train(trainX, trainy):
     init_theta_linear=np.zeros(n)
     # eps=0.01
     # init_theta_lsin=np.random.rand(n)*(2*eps)-eps
-    theta=opt.fmin_cg(cost.f_linear,init_theta_linear,fprime=cost.fgrad_linear,args=(trainX,trainy,475,1))
+    theta=opt.fmin_cg(cost.f_evaluation,init_theta_linear,fprime=cost.fgrad_evaluation,args=(trainX,trainy,475))
     return np.mat(theta).T
 
 

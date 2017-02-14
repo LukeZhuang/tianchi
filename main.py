@@ -64,8 +64,8 @@ def finaljob():
 
 if __name__ == '__main__':
     # outputall()
-    # outputone(217, 1)
-    finaljob()
+    outputone(217, 3)
+    # finaljob()
     # a=np.matrix('1;2;3')
     # a=np.power(a,2)
     # b=np.matrix('2;3;4')

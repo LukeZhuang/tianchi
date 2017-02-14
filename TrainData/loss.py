@@ -17,7 +17,7 @@ def fgrad_linear(theta, X, y, end_day, delta):
     m = X.shape[0]
     loss = X * theta - y
     # weight = 100*np.exp(np.power(X[:, 1] - end_day, 2) / (-2. * delta * delta))
-    weight = 1. / (np.power((X[:, 1] - end_day)/10, 2) + 1)
+    weight = 1. / (np.power((X[:, 1] - end_day) / 10, 2) + 1)
     loss_weight = np.matrix(np.array(loss) * np.array(weight))
     grad = (1. / m) * (X.T * loss_weight)
     return np.array(grad.T.tolist()[0])
@@ -43,6 +43,29 @@ def fgrad_lsin(theta, X, y):
     return np.array(grad.T.tolist()[0])
 
 
+def eval(theta, X, y):
+    return (X * theta - y) / (X * theta + y)
+
+
+def f_evaluation(theta, X, y, end_day):
+    theta = np.mat(theta).T
+    m = X.shape[0]
+    square = np.power(eval(theta, X, y), 2)
+    weight = 1. / (np.power((X[:, 1] - end_day) / 10, 2) + 1)
+    J = np.sum(np.array(square) * np.array(weight))
+    return J
+
+
+def fgrad_evaluation(theta, X, y, end_day):
+    theta = np.array([theta]).T
+    m = X.shape[0]
+    loss = np.matrix(np.array(eval(theta, X, y)) * np.array(2. * y / np.power(X * theta + y, 2)))
+    weight = 1. / (np.power((X[:, 1] - end_day) / 10, 2) + 1)
+    loss_weight = np.matrix(np.array(loss) * np.array(weight))
+    grad = (1. / m) * (X.T * loss_weight)
+    return np.array(grad.T.tolist()[0])
+
+
 if __name__ == '__main__':
     # a = np.array([[1], [2], [3]])
     # b = np.array([1, 2, 3])
@@ -64,4 +87,5 @@ if __name__ == '__main__':
     # print type(b)
     # print a * b
     a = np.matrix('1;2;3')
-    print 1./a
+    b = np.matrix('2;3;4')
+    print 1. * a / b
