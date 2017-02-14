@@ -23,7 +23,7 @@ def loadall(shop_id):
         print "Mysql Error %d: %s" % (e.args[0], e.args[1])
 
 
-def loadfromMysql(sql_res,end_day):
+def loadfromMysql(sql_res, end_day):
     bond = 0
     X = []
     y = []

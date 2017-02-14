@@ -93,4 +93,4 @@ if __name__ == '__main__':
     # print a * b
     a = np.matrix('1;2;3')
     b = np.matrix('2;3;4')
-    print np.matrix(np.array(a)*np.array(b))
+    print np.matrix(np.array(a) * np.array(b))
