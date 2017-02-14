@@ -10,13 +10,14 @@ import LoadData.polyX as polyer
 
 # 全量
 def outputall():
+    sql_res = loader.loadall()
     n = 2000
     T = 14
     tot_loss = 0.0
     for shop_id in range(n):
         for week_day in range(7):
             print 'shop_id = %d, week_day = %d' % (shop_id + 1, week_day + 1)
-            [trainX, trainy, testX, testy] = loader.loadfromMysql(shop_id + 1, week_day + 1, 475)
+            [trainX, trainy, testX, testy] = loader.loadfromMysql(sql_res[week_day],475)
             if testX.shape[0] > 0:
                 theta = trainer.train(trainX, trainy)
                 tot_loss += evaluator.evaluation(np.maximum(testX * theta,0), testy)
@@ -25,12 +26,15 @@ def outputall():
 
 # 单个测试
 def outputone(shop_id, week_day):
-    [trainX, trainy, testX, testy] = loader.loadfromMysql(shop_id, week_day, 475)
+    sql_res = loader.loadall(shop_id)
+    [trainX, trainy, testX, testy] = loader.loadfromMysql(sql_res[week_day-1], 475)
     ploter.figure(1)
     ploter.plot(np.row_stack((trainX[:, 1], testX[:, 1])), np.row_stack((trainy, testy)), 'b-')
     theta = trainer.train(trainX, trainy)
     ploter.plot(np.row_stack((trainX[:, 1], testX[:, 1])), np.row_stack((trainX * theta, testX * theta)), 'r-')
-    print testX * theta
+    # print theta
+    # print testX
+    # print testX * theta
     ploter.show(1)
 
 
@@ -39,13 +43,13 @@ def finaljob():
     test_day = [[496, 503], [490, 497], [491, 498], [492, 499], [493, 500], [494, 501], [495, 502]]
     n = 2000
     T = 14
-    tot_loss = 0.0
     f_out = open('result.csv', 'w')
     for shop_id in range(n):
+        sql_res=loader.loadall(shop_id+1)
         result = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         for week_day in range(7):
             print 'shop_id = %d, week_day = %d' % (shop_id + 1, week_day + 1)
-            [trainX, trainy, testX, testy] = loader.loadfromMysql(shop_id + 1, week_day + 1, 489)
+            [trainX, trainy, testX, testy] = loader.loadfromMysql(sql_res[week_day],489)
             theta = trainer.train(trainX, trainy)
             # ploter.figure(1)
             # ploter.plot(trainX[:,1],trainy,'b-')
@@ -64,8 +68,8 @@ def finaljob():
 
 if __name__ == '__main__':
     # outputall()
-    outputone(217, 3)
-    # finaljob()
+    # outputone(356, 1)
+    finaljob()
     # a=np.matrix('1;2;3')
     # a=np.power(a,2)
     # b=np.matrix('2;3;4')
