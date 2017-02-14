@@ -26,8 +26,8 @@ def visualizeResult(shop_id):
     X = np.array(X)
     y = np.array(y)
     ploter.plot(X, y, 'b-')
-    X1 = []
-    y1 = []
+    X1 = [X[len(X)-1]]
+    y1 = [y[len(y)-1]]
     days = [490, 491, 492, 493, 494, 495, 496, 497, 498, 499, 500, 501, 502, 503]
     for day in days:
         X1.append(day)
