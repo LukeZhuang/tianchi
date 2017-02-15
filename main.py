@@ -41,11 +41,13 @@ def outputone(shop_id, week_day):
 
 # 最终结果
 def finaljob():
+    test_week = [[71, 72], [70, 71], [71, 72], [71, 72], [71, 72], [71, 72], [71, 72]]
     test_day = [[496, 503], [490, 497], [491, 498], [492, 499], [493, 500], [494, 501], [495, 502]]
     n = 2000
     T = 14
     f_out = open('result.csv', 'w')
-    for shop_id in range(n):
+    for shop_id in range(1):
+        shop_id+=748
         sql_res = loader.loadall(shop_id + 1)
         result = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         for week_day in range(7):
@@ -56,22 +58,22 @@ def finaljob():
             # ploter.plot(trainX[:,1],trainy,'b-')
             # ploter.plot(trainX[:,1],trainX*theta,'r-')
             # ploter.show(1)
-            testX = np.matrix(np.array(test_day[week_day])).T
+            testX = np.matrix(np.array(test_week[week_day])).T
             predict = (polyer.polyX(testX) * theta).T.tolist()[0]
-            testX = (testX).T.tolist()[0]
+            testX = test_day[week_day]
             for i in range(len(testX)):
                 result[testX[i] - 490] = predict[i]
         print>> f_out, '%d' % (shop_id + 1),
         for i in range(14):
-            print >> f_out, ',%d' % (max(int(result[i]), 0)),
+            print >> f_out, ',%d' % (abs(int(result[i]))),
         print>> f_out, ''
 
 
 if __name__ == '__main__':
     # outputall()
-    # outputone(23, 6)
-    # finaljob()
-    showresult.visualizeResult(474)
+    # outputone(622, 3)
+    finaljob()
+    # showresult.visualizeResult(749)
     # a=np.matrix('1;2;3')
     # a=np.power(a,2)
     # b=np.matrix('2;3;4')

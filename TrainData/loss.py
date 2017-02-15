@@ -53,7 +53,7 @@ def f_evaluation(theta, X, y, end_day):
     m = X.shape[0]
     square = np.power(eval(theta, X, y), 2)
     # print square
-    weight = 1. / (np.power((X[:, 1] - end_day) / 10, 2) + 1)
+    weight = 1. / (np.power((X[:, 1] - end_day), 4) + 1)
     J = np.sum(np.array(square) * np.array(weight))
     # print J
     return J
@@ -63,7 +63,7 @@ def fgrad_evaluation(theta, X, y, end_day):
     theta = np.array([theta]).T
     m = X.shape[0]
     loss = np.matrix(np.array(eval(theta, X, y)) * np.array(2. * y / np.power(X * theta + y, 2)))
-    weight = 1. / (np.power((X[:, 1] - end_day) / 10, 2) + 1)
+    weight = 1. / (np.power((X[:, 1] - end_day), 4) + 1)
     loss_weight = np.matrix(np.array(loss) * np.array(weight))
     grad = X.T * loss_weight
     # print grad.shape
