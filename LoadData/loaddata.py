@@ -14,7 +14,7 @@ def loadall(shop_id):
         res = cur.fetchall()
         res_week = [[], [], [], [], [], [], []]
         for r in res:
-            res_week[r[3] - 1].append((r[5], r[2]))
+            res_week[r[3] - 1].append((r[4], r[2]))
         conn.commit()
         cur.close()
         conn.close()
