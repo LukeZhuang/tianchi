@@ -63,10 +63,49 @@ def finaljob():
         print>> f_out, ''
 
 
+# 最终结果_平均平滑
+def finaljob2():
+    test_day = [[496, 503], [490, 497], [491, 498], [492, 499], [493, 500], [494, 501], [495, 502]]
+    n = 2000
+    T = 14
+    interval = 5
+    f_out = open('result.csv', 'w')
+    for shop_id in range(10):
+        sql_res = loader.loadall(shop_id + 1)
+        result = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        for week_day in range(7):
+            print 'shop_id = %d, week_day = %d' % (shop_id + 1, week_day + 1)
+            # ploter.figure(1)
+            # [trainX, trainy, testX, testy] = loader.loadfromMysql(sql_res[week_day], 489)
+            # ploter.plot(trainX[:, 1], trainy, 'b-')
+            [trainX, trainy, testX, testy] = loader.loadfromMysql(sql_res[week_day], 489, interval)
+            # ploter.plot(trainX[:, 1], trainy, 'y-')
+            theta = trainer.train(trainX, trainy)
+            # ploter.plot(trainX[:, 1],trainX*theta,'r-')
+            # ploter.show(1)
+            testX = np.matrix(np.array(test_day[week_day])).T
+            predict_raw = (polyer.polyX(testX) * theta).T.tolist()[0]
+            trainX = trainX[:, 1].T.tolist()[0]
+            testX = test_day[week_day]
+            predict = [0, 0]
+            # predict[0] = predict_raw[0] * (testX[0] - trainX[-interval + 1] + 1) - sum(trainy[-interval + 1:])
+            # predict[1] = predict_raw[1] * (testX[1] - trainX[-interval + 2] + 1) - sum(trainy[-interval + 2:]) - \
+            #              predict[0]
+            predict[0] = predict_raw[0] * interval - sum(trainy[-interval + 1:])
+            predict[1] = predict_raw[1] * interval - sum(trainy[-interval + 2:]) - predict[0]
+            for i in range(2):
+                result[testX[i] - 490] = predict[i]
+        print>> f_out, '%d' % (shop_id + 1),
+        for i in range(14):
+            print >> f_out, ',%d' % (abs(int(result[i]))),
+        print>> f_out, ''
+
+
 if __name__ == '__main__':
     # outputall()
     # outputone(625, 7)
-    finaljob()
+    # finaljob()
+    finaljob2()
     # showresult.visualizeResult(1)
     # a=np.matrix('1;2;3')
     # a=np.power(a,2)
